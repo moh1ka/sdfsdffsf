@@ -1,0 +1,14 @@
+19 Feb 2018 -- dodgy looking trace with double sized buffer(SOLVED!)
+
+
+Problem encountered when implement the double sized buffer: 
+only initialised half of the buffer when the entire buffer is used.
+x buffer is not in used else than increment the ptr(and read in the samples)
+
+extend[2N]
+
+extend[N+ptr]= x[ptr]; //original initialisation (only the latter half the buffer -- size N) the front half of the buffer is floating and
+does not have valid data.
+
+Now make use of the first half of the buffer with:
+extend[ptr]= x[ptr];  //initialise the front half of the buffer
