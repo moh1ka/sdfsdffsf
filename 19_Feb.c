@@ -132,7 +132,8 @@ void init_HWI(void)
 /******************** WRITE YOUR INTERRUPT SERVICE ROUTINE HERE***********************/  
 void lab4(void)
 {
-	//mono_write_16Bit(non_cir());
+	mono_write_16Bit(non_cir());
+}
 	//mono_write_16Bit(non_cir_op_1());
 	//mono_write_16Bit(non_cir_op_2());
 	
