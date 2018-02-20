@@ -20,22 +20,20 @@ dev = [dev_sa dev_rp dev_sa];
 
 %firpm(N,F,A,W) returns a filter of order N+1 
 %therefore, we need a buffer of size length N+1 in our C code
-b = firpm(n,fo,ao,w);
+B = firpm(n,fo,ao,w);
 
-freqz(b);
+freqz(B);
 
 %writing buffer size and coefficient values to a 'fir_coef.txt'
-write_b = fopen('fir_coef.txt','wt');
+write_B = fopen('fir_coef.txt','wt');
  
 %this prints out the length of the buffer required for the filter in C
-fprintf(write_b,'#define N %d\n', length(b));
+fprintf(write_B,'#define N %d\n', length(B));
 %this intializes the buffer 
-fprintf(write_b,'double b[] = {');
+fprintf(write_B,'double b[] = {');
 %------write coeffs into array-------------------------
-for i = 1: length(b)-1
-    fprintf(write_b,'%e, ',b(i));
+for i = 1: length(B)-1
+    fprintf(write_B,'%e, ',B(i));
 end
-fprintf(write_b,'%c}; \n', b(length(b)));
+fprintf(write_B,'%c}; \n', B(length(B)));
 fclose('all');
-
-
