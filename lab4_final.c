@@ -27,7 +27,7 @@
 
 /* The file dsk6713.h must be included in every program that uses the BSL.  This 
    example also includes dsk6713_aic23.h because it uses the 
-   AIC23 codec module (audio interface). */
+k   AIC23 codec module (audio interface). */
 #include "dsk6713.h"
 #include "dsk6713_aic23.h"
 
@@ -39,7 +39,7 @@
 #include "fir_coef.txt"
 /******************************* Global declarations ********************************/
 double x[N] = {0.0};	//initialise buffer to zero
-int ptr = N-1;
+int ptr = N-1;		//initialise pointer to size-1
 double extend[2*N] = {0.0};	//initialise double sized buffer to zero
 
 /* Audio port configuration settings: these values set registers in the AIC23 audio 
@@ -71,11 +71,11 @@ void init_HWI(void);
 void lab4(void); 
 // ---------- implement filter ------
 double non_cir (void);//original non-circular
-double non_cir_op_1 (void); //optimised non-circular
-double non_cir_op_2(void);
-double cir(void);//original circular 
-double cir_op_1 (void);
-double cir_op_2 (void);
+double non_cir_op_1 (void); //optimised version 1 of non-circular
+double non_cir_op_2(void); //optimisation 2
+double cir(void); //original circular implementation
+double cir_op_1 (void); //obtimised 1
+double cir_op_2 (void); //optimised 2
 /********************************** Main routine ************************************/
 void main(){      
 
@@ -117,6 +117,7 @@ void init_hardware()
 	
 }
 
+
 /********************************** init_HWI() **************************************/  
 void init_HWI(void)
 {
@@ -134,7 +135,7 @@ void lab4(void)
 	//mono_write_16Bit(non_cir());
 	//mono_write_16Bit(non_cir_op_1());
 	mono_write_16Bit(non_cir_op_2());
-	
+	/*write the filtered samples to the output*/
 	//mono_write_16Bit(cir());
 	//mono_write_16Bit(cir_op_1());//original circular 
 	//mono_write_16Bit(cir_op_2());//double size buffer 
@@ -144,6 +145,7 @@ void lab4(void)
 /******** using non-circular buffer **********/
 double non_cir (void)
 {
+		//declare variables:
 	int i;
 	int j;
 		//initilise y to 0 each time 
@@ -154,6 +156,7 @@ double non_cir (void)
 	}
 		//put new sample into buffer
 	x[0] = mono_read_16Bit();
+		//do convolution for each pair of sample and tabs
 	for( j = N-1 ; j > 0 ; j--){
 		y += x[j]*b[j];
 	}
@@ -166,14 +169,15 @@ double non_cir_op_1 (void)
 {
 	int i;
 	int j;
-	double y = 0.0; //initilise y to 0 each time 
+		//initilise y to 0 each time
+	double y = 0.0;
 		//shift the buffer
 	for( i = N-1; i > 0; i--){
 		x[i] = x[i-1];
 	}
 	x[0] = mono_read_16Bit(); //put new sample into buffer
 	
-		//even number of samples 
+		//even number of tabs and do convolution for a tab and sum of mirror-imaged samples
 	if ( N % 2 == 0 )
 	{
 		for( i= 0; i <= N/2 - 1; i++)
@@ -181,14 +185,14 @@ double non_cir_op_1 (void)
 			y+= b[i]* ( x[i] + x[N-1-i] ); //coeffs are symmetric so b[i] == b[N-1-i]
 		}
 	}
-		//odd number of samples
+		//odd number of tabs
 	else 
 	{
 		for( j = 0; j < (N-1)/2; j++)
 		{
 			y+= b[j]* ( x[j] + x[N-1-j] ); //doesn't include midpoint since b[(N-1)/2 ] is not duplicated
 		}
-		
+			//for odd cases the midpoint does not have a mirror-imaged pair and need to be computed on its own
 		y += b[(N-1)/2] * x[(N-1)/2]; // add the midpoint on outside of the for loop 
 	}
 	return y;
@@ -206,7 +210,7 @@ double non_cir_op_2(void)
 	}
 		//put new sample into buffer
 	x[0] = mono_read_16Bit();
-
+	//do convolution before midpoint is reached
 	for( i = 0; i < (N-1)/2; i++) // true for both odd and even number of samples
 	{
 		y += b[i]* ( x[i] + x[N-1-i] );
@@ -228,7 +232,7 @@ double cir(void)//original circular
 	double y = 0.0;
 	x[ptr] = mono_read_16Bit(); // read in new samples
 	
-	// from x[ptr]*b[0] to end of buffer x[N-1]
+	// from x[ptr](*b[0]) to end of buffer x[N-1]
 	for ( i=ptr; i<N; i++)
 	{
 		y += x[i]*b[i-ptr]; // i = N-1, x[N-1]* b[N-1- ptr]
