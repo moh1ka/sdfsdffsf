@@ -288,7 +288,7 @@ double cir_op_1 (void)// circular with only half of the tabs
 }
 
 //-----------------------------------------------------------------------------------------------
-double cir_op_2 (void)//circular wiht double sized buffer
+double cir_op_2 (void)//circular with double sized buffer
 {
 	int i;
 	double y = 0.0;
