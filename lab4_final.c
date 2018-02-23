@@ -132,10 +132,11 @@ void init_HWI(void)
 /******************** WRITE YOUR INTERRUPT SERVICE ROUTINE HERE***********************/  
 void lab4(void)
 {
+		/*write the filtered samples to the output*/
 	//mono_write_16Bit(non_cir());
 	//mono_write_16Bit(non_cir_op_1());
 	mono_write_16Bit(non_cir_op_2());
-	/*write the filtered samples to the output*/
+
 	//mono_write_16Bit(cir());
 	//mono_write_16Bit(cir_op_1());//original circular 
 	//mono_write_16Bit(cir_op_2());//double size buffer 
