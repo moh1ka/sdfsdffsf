@@ -121,9 +121,9 @@ void init_hardware()
 /********************************** init_HWI() **************************************/  
 void init_HWI(void)
 {
-	IRQ_globalDisable();			// Globally disables interrupts
-	IRQ_nmiEnable();				// Enables the NMI interrupt (used by the debugger)
-	IRQ_map(IRQ_EVT_RINT1,4);		// Maps an event to a physical interrupt (X for transmit, Ex2: R for recieve, Ex1)
+	IRQ_globalDisable();		// Globally disables interrupts
+	IRQ_nmiEnable();			// Enables the NMI interrupt (used by the debugger)
+	IRQ_map(IRQ_EVT_RINT1,4);	// Maps an event to a physical interrupt (X-transmit, Ex2; R-recieve, Ex1)
 	IRQ_enable(IRQ_EVT_RINT1);		// Enables the event (X for transmit, Ex2: R for recieve, Ex1)
 	IRQ_globalEnable();				// Globally enables interrupts
 
