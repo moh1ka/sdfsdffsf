@@ -296,6 +296,7 @@ double cir_op_2 (void)//circular with double sized buffer
 {
 	int i;
 	double y = 0.0;
+		// initialise the (double sized) extend buffer
 	extend[ptr] = mono_read_16Bit();
 	extend[N+ptr]= extend[ptr];
 	
@@ -308,7 +309,7 @@ double cir_op_2 (void)//circular with double sized buffer
 	{
 		y+= b[(N-1)/2]* extend[ (ptr + (N-1)/2) ];
 	}
-		
+		//if the pointer reaches 0 reset to N-1
 	if(ptr == 0)
 	{
 		ptr = N-1;
